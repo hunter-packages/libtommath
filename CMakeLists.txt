@@ -140,6 +140,10 @@ set(TOMMATH_SRCS
     bn_s_mp_sub.c
 )
 
+if(WIN32)
+    set(TOMMATH_HEADERS "${TOMMATH_HEADERS}" "ms_stdint.h")
+endif()
+
 set(TOMMATH_ALL_SRCS
     ${TOMMATH_SRCS}
     ${TOMMATH_HEADERS}
