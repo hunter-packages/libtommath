@@ -17,7 +17,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
+
+#if defined _MSC_VER && _MSC_VER <= 1500
+	#include "ms_stdint.h"
+#else
+	#include <stdint.h>
+#endif
+
 #include <limits.h>
 
 #include <tommath_class.h>
