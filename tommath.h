@@ -17,13 +17,22 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
+#if defined _MSC_VER && _MSC_VER <= 1500
+	#include "ms_stdint.h"
+#else
+	#include <stdint.h>
+#endif
 #include <limits.h>
 
 #include <tommath_class.h>
 
 #ifdef __cplusplus
 extern "C" {
+#endif
+
+/* MS Visual C++ doesn't have a 128bit type for words, so fall back to 32bit MPI's (where words are 64bit) */
+#if defined(_MSC_VER) || defined(__LLP64__) || defined(__e2k__) || defined(__LCC__)
+#   define MP_32BIT
 #endif
 
 /* detect 64-bit mode if possible */
@@ -33,9 +42,15 @@ extern "C" {
     defined(__sparcv9) || defined(__sparc_v9__) || defined(__sparc64__) || \
     defined(__ia64) || defined(__ia64__) || defined(__itanium__) || defined(_M_IA64) || \
     defined(__LP64__) || defined(_LP64) || defined(__64BIT__)
-   #if !(defined(MP_32BIT) || defined(MP_16BIT) || defined(MP_8BIT))
-      #define MP_64BIT
-   #endif
+#   if !(defined(MP_32BIT) || defined(MP_16BIT) || defined(MP_8BIT))
+#      if defined(__GNUC__)
+/* we support 128bit integers only via: __attribute__((mode(TI))) */
+#         define MP_64BIT
+#      else
+/* otherwise we fall back to MP_32BIT even on 64bit platforms */
+#         define MP_32BIT
+#      endif
+#   endif
 #endif
 
 /* some default configurations.
