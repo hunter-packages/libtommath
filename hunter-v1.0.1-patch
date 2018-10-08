@@ -1,0 +1,662 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+new file mode 100644
+index 0000000..8054709
+--- /dev/null
++++ b/CMakeLists.txt
+@@ -0,0 +1,222 @@
++CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
++
++PROJECT(tommath VERSION 1.0.1)
++
++set(TOMMATH_HEADERS
++    tommath.h
++    tommath_class.h
++    tommath_private.h
++    tommath_superclass.h
++)
++
++set(TOMMATH_SRCS
++    bncore.c
++    bn_error.c
++    bn_fast_mp_invmod.c
++    bn_fast_mp_montgomery_reduce.c
++    bn_fast_s_mp_mul_digs.c
++    bn_fast_s_mp_mul_high_digs.c
++    bn_fast_s_mp_sqr.c
++    bn_mp_2expt.c
++    bn_mp_abs.c
++    bn_mp_add.c
++    bn_mp_add_d.c
++    bn_mp_addmod.c
++    bn_mp_and.c
++    bn_mp_clamp.c
++    bn_mp_clear.c
++    bn_mp_clear_multi.c
++    bn_mp_cmp.c
++    bn_mp_cmp_d.c
++    bn_mp_cmp_mag.c
++    bn_mp_cnt_lsb.c
++    bn_mp_copy.c
++    bn_mp_count_bits.c
++    bn_mp_div_2.c
++    bn_mp_div_2d.c
++    bn_mp_div_3.c
++    bn_mp_div.c
++    bn_mp_div_d.c
++    bn_mp_dr_is_modulus.c
++    bn_mp_dr_reduce.c
++    bn_mp_dr_setup.c
++    bn_mp_exch.c
++    bn_mp_export.c
++    bn_mp_expt_d.c
++    bn_mp_expt_d_ex.c
++    bn_mp_exptmod.c
++    bn_mp_exptmod_fast.c
++    bn_mp_exteuclid.c
++    bn_mp_fread.c
++    bn_mp_fwrite.c
++    bn_mp_gcd.c
++    bn_mp_get_int.c
++    bn_mp_get_long.c
++    bn_mp_get_long_long.c
++    bn_mp_grow.c
++    bn_mp_import.c
++    bn_mp_init.c
++    bn_mp_init_copy.c
++    bn_mp_init_multi.c
++    bn_mp_init_set.c
++    bn_mp_init_set_int.c
++    bn_mp_init_size.c
++    bn_mp_invmod.c
++    bn_mp_invmod_slow.c
++    bn_mp_is_square.c
++    bn_mp_jacobi.c
++    bn_mp_karatsuba_mul.c
++    bn_mp_karatsuba_sqr.c
++    bn_mp_lcm.c
++    bn_mp_lshd.c
++    bn_mp_mod_2d.c
++    bn_mp_mod.c
++    bn_mp_mod_d.c
++    bn_mp_montgomery_calc_normalization.c
++    bn_mp_montgomery_reduce.c
++    bn_mp_montgomery_setup.c
++    bn_mp_mul_2.c
++    bn_mp_mul_2d.c
++    bn_mp_mul.c
++    bn_mp_mul_d.c
++    bn_mp_mulmod.c
++    bn_mp_neg.c
++    bn_mp_n_root.c
++    bn_mp_n_root_ex.c
++    bn_mp_or.c
++    bn_mp_prime_fermat.c
++    bn_mp_prime_is_divisible.c
++    bn_mp_prime_is_prime.c
++    bn_mp_prime_miller_rabin.c
++    bn_mp_prime_next_prime.c
++    bn_mp_prime_rabin_miller_trials.c
++    bn_mp_prime_random_ex.c
++    bn_mp_radix_size.c
++    bn_mp_radix_smap.c
++    bn_mp_rand.c
++    bn_mp_read_radix.c
++    bn_mp_read_signed_bin.c
++    bn_mp_read_unsigned_bin.c
++    bn_mp_reduce_2k.c
++    bn_mp_reduce_2k_l.c
++    bn_mp_reduce_2k_setup.c
++    bn_mp_reduce_2k_setup_l.c
++    bn_mp_reduce.c
++    bn_mp_reduce_is_2k.c
++    bn_mp_reduce_is_2k_l.c
++    bn_mp_reduce_setup.c
++    bn_mp_rshd.c
++    bn_mp_set.c
++    bn_mp_set_int.c
++    bn_mp_set_long.c
++    bn_mp_set_long_long.c
++    bn_mp_shrink.c
++    bn_mp_signed_bin_size.c
++    bn_mp_sqr.c
++    bn_mp_sqrmod.c
++    bn_mp_sqrt.c
++    bn_mp_sqrtmod_prime.c
++    bn_mp_sub.c
++    bn_mp_sub_d.c
++    bn_mp_submod.c
++    bn_mp_toom_mul.c
++    bn_mp_toom_sqr.c
++    bn_mp_toradix.c
++    bn_mp_toradix_n.c
++    bn_mp_to_signed_bin.c
++    bn_mp_to_signed_bin_n.c
++    bn_mp_to_unsigned_bin.c
++    bn_mp_to_unsigned_bin_n.c
++    bn_mp_unsigned_bin_size.c
++    bn_mp_xor.c
++    bn_mp_zero.c
++    bn_prime_tab.c
++    bn_reverse.c
++    bn_s_mp_add.c
++    bn_s_mp_exptmod.c
++    bn_s_mp_mul_digs.c
++    bn_s_mp_mul_high_digs.c
++    bn_s_mp_sqr.c
++    bn_s_mp_sub.c
++)
++
++if(WIN32)
++    set(TOMMATH_HEADERS "${TOMMATH_HEADERS}" "ms_stdint.h")
++endif()
++
++set(TOMMATH_ALL_SRCS
++    ${TOMMATH_SRCS}
++    ${TOMMATH_HEADERS}
++)
++
++include_directories(${CMAKE_CURRENT_SOURCE_DIR})
++
++
++set(BUILD_DYNAMIC OFF CACHE BOOL "build dynamic lib instead of static one")
++
++
++if(BUILD_DYNAMIC)
++    set(TOMMATH_BUILD_TYPE SHARED)
++
++    if(WIN32)
++        set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
++    endif()
++else()
++    set(TOMMATH_BUILD_TYPE STATIC)
++endif()
++
++
++add_library(tommath ${TOMMATH_BUILD_TYPE} ${TOMMATH_ALL_SRCS})
++
++
++#######################################
++#       cmake config-mode stuff       #
++#######################################
++
++set(config_install_dir "lib/cmake/${PROJECT_NAME}")
++set(include_install_dir "include")
++
++set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated/cmake")
++
++set(version_config "${generated_dir}/${PROJECT_NAME}ConfigVersion.cmake")
++set(project_config "${generated_dir}/${PROJECT_NAME}Config.cmake")
++set(targets_export_name "${PROJECT_NAME}Targets")
++set(namespace "${PROJECT_NAME}::")
++
++include(CMakePackageConfigHelpers)
++
++# Note: PROJECT_VERSION is used as a VERSION
++write_basic_package_version_file(
++    "${version_config}" COMPATIBILITY SameMajorVersion
++)
++
++# Note: variable 'targets_export_name' used
++configure_file("Config.cmake.in" "${project_config}" @ONLY)
++
++
++install(
++    TARGETS tommath
++    EXPORT "${targets_export_name}"
++    LIBRARY DESTINATION "lib"
++    ARCHIVE DESTINATION "lib"
++    RUNTIME DESTINATION "bin"
++    INCLUDES DESTINATION "${include_install_dir}"
++)
++
++install(
++    FILES ${TOMMATH_HEADERS}
++    DESTINATION "${include_install_dir}"
++)
++
++
++install(
++    FILES "${project_config}" "${version_config}"
++    DESTINATION "${config_install_dir}"
++)
++
++
++install(
++    EXPORT "${targets_export_name}"
++    NAMESPACE "${namespace}"
++    DESTINATION "${config_install_dir}"
++)
+diff --git a/Config.cmake.in b/Config.cmake.in
+new file mode 100644
+index 0000000..e7ee7bb
+--- /dev/null
++++ b/Config.cmake.in
+@@ -0,0 +1,3 @@
++include(CMakeFindDependencyMacro)
++
++include("${CMAKE_CURRENT_LIST_DIR}/@targets_export_name@.cmake")
+diff --git a/makefile.include b/makefile.include
+new file mode 100644
+index 0000000..3a599e8
+--- /dev/null
++++ b/makefile.include
+@@ -0,0 +1,117 @@
++#
++# Include makefile for libtommath
++#
++
++#version of library
++VERSION=1.0.1
++VERSION_PC=1.0.1
++VERSION_SO=1:1
++
++PLATFORM := $(shell uname | sed -e 's/_.*//')
++
++# default make target
++default: ${LIBNAME}
++
++# Compiler and Linker Names
++ifndef CROSS_COMPILE
++  CROSS_COMPILE=
++endif
++
++ifeq ($(CC),cc)
++  CC = $(CROSS_COMPILE)gcc
++endif
++LD=$(CROSS_COMPILE)ld
++AR=$(CROSS_COMPILE)ar
++RANLIB=$(CROSS_COMPILE)ranlib
++
++ifndef MAKE
++   MAKE=make
++endif
++
++CFLAGS += -I./ -Wall -Wsign-compare -Wextra -Wshadow
++
++ifndef NO_ADDTL_WARNINGS
++# additional warnings
++CFLAGS += -Wsystem-headers -Wdeclaration-after-statement -Wbad-function-cast -Wcast-align
++CFLAGS += -Wstrict-prototypes -Wpointer-arith
++endif
++
++ifdef COMPILE_DEBUG
++#debug
++CFLAGS += -g3
++else
++
++ifdef COMPILE_SIZE
++#for size
++CFLAGS += -Os
++else
++
++ifndef IGNORE_SPEED
++#for speed
++CFLAGS += -O3 -funroll-loops
++
++#x86 optimizations [should be valid for any GCC install though]
++CFLAGS  += -fomit-frame-pointer
++endif
++
++endif # COMPILE_SIZE
++endif # COMPILE_DEBUG
++
++ifneq ($(findstring clang,$(CC)),)
++CFLAGS += -Wno-typedef-redefinition -Wno-tautological-compare -Wno-builtin-requires-header
++endif
++ifeq ($(PLATFORM), Darwin)
++CFLAGS += -Wno-nullability-completeness
++endif
++
++# adjust coverage set
++ifneq ($(filter $(shell arch), i386 i686 x86_64 amd64 ia64),)
++   COVERAGE = test_standalone timing
++   COVERAGE_APP = ./test && ./ltmtest
++else
++   COVERAGE = test_standalone
++   COVERAGE_APP = ./test
++endif
++
++HEADERS_PUB=tommath.h tommath_class.h tommath_superclass.h
++HEADERS=tommath_private.h $(HEADERS_PUB)
++
++test_standalone: CFLAGS+=-DLTM_DEMO_TEST_VS_MTEST=0
++
++#LIBPATH  The directory for libtommath to be installed to.
++#INCPATH  The directory to install the header files for libtommath.
++#DATAPATH The directory to install the pdf docs.
++DESTDIR  ?=
++PREFIX   ?= /usr/local
++LIBPATH  ?= $(PREFIX)/lib
++INCPATH  ?= $(PREFIX)/include
++DATAPATH ?= $(PREFIX)/share/doc/libtommath/pdf
++
++#make the code coverage of the library
++#
++coverage: CFLAGS += -fprofile-arcs -ftest-coverage -DTIMING_NO_LOGS
++coverage: LFLAGS += -lgcov
++coverage: LDFLAGS += -lgcov
++
++coverage: $(COVERAGE)
++	$(COVERAGE_APP)
++
++lcov: coverage
++	rm -f coverage.info
++	lcov --capture --no-external --no-recursion $(LCOV_ARGS) --output-file coverage.info -q
++	genhtml coverage.info --output-directory coverage -q
++
++# target that removes all coverage output
++cleancov-clean:
++	rm -f `find . -type f -name "*.info" | xargs`
++	rm -rf coverage/
++
++# cleans everything - coverage output and standard 'clean'
++cleancov: cleancov-clean clean
++
++clean:
++	rm -f *.gcda *.gcno *.gcov *.bat *.o *.a *.obj *.lib *.exe *.dll etclib/*.o demo/demo.o test ltmtest mpitest mtest/mtest mtest/mtest.exe \
++        *.idx *.toc *.log *.aux *.dvi *.lof *.ind *.ilg *.ps *.log *.s mpi.c *.da *.dyn *.dpi tommath.tex `find . -type f | grep [~] | xargs` *.lo *.la
++	rm -rf .libs/
++	${MAKE} -C etc/ clean MAKE=${MAKE}
++	${MAKE} -C doc/ clean MAKE=${MAKE}
+diff --git a/ms_stdint.h b/ms_stdint.h
+new file mode 100644
+index 0000000..21d25d5
+--- /dev/null
++++ b/ms_stdint.h
+@@ -0,0 +1,247 @@
++// ISO C9x  compliant stdint.h for Microsoft Visual Studio
++// Based on ISO/IEC 9899:TC2 Committee draft (May 6, 2005) WG14/N1124 
++// 
++//  Copyright (c) 2006-2008 Alexander Chemeris
++// 
++// Redistribution and use in source and binary forms, with or without
++// modification, are permitted provided that the following conditions are met:
++// 
++//   1. Redistributions of source code must retain the above copyright notice,
++//      this list of conditions and the following disclaimer.
++// 
++//   2. Redistributions in binary form must reproduce the above copyright
++//      notice, this list of conditions and the following disclaimer in the
++//      documentation and/or other materials provided with the distribution.
++// 
++//   3. The name of the author may be used to endorse or promote products
++//      derived from this software without specific prior written permission.
++// 
++// THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
++// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
++// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
++// EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
++// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
++// OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
++// WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
++// OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
++// ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++// 
++///////////////////////////////////////////////////////////////////////////////
++
++#ifndef _MSC_VER // [
++#error "Use this header only with Microsoft Visual C++ compilers!"
++#endif // _MSC_VER ]
++
++#ifndef _MSC_STDINT_H_ // [
++#define _MSC_STDINT_H_
++
++#if _MSC_VER > 1000
++#pragma once
++#endif
++
++#include <limits.h>
++
++// For Visual Studio 6 in C++ mode and for many Visual Studio versions when
++// compiling for ARM we should wrap <wchar.h> include with 'extern "C++" {}'
++// or compiler give many errors like this:
++//   error C2733: second C linkage of overloaded function 'wmemchr' not allowed
++#ifdef __cplusplus
++extern "C" {
++#endif
++#  include <wchar.h>
++#ifdef __cplusplus
++}
++#endif
++
++// Define _W64 macros to mark types changing their size, like intptr_t.
++#ifndef _W64
++#  if !defined(__midl) && (defined(_X86_) || defined(_M_IX86)) && _MSC_VER >= 1300
++#     define _W64 __w64
++#  else
++#     define _W64
++#  endif
++#endif
++
++
++// 7.18.1 Integer types
++
++// 7.18.1.1 Exact-width integer types
++
++// Visual Studio 6 and Embedded Visual C++ 4 doesn't
++// realize that, e.g. char has the same size as __int8
++// so we give up on __intX for them.
++#if (_MSC_VER < 1300)
++   typedef signed char       int8_t;
++   typedef signed short      int16_t;
++   typedef signed int        int32_t;
++   typedef unsigned char     uint8_t;
++   typedef unsigned short    uint16_t;
++   typedef unsigned int      uint32_t;
++#else
++   typedef signed __int8     int8_t;
++   typedef signed __int16    int16_t;
++   typedef signed __int32    int32_t;
++   typedef unsigned __int8   uint8_t;
++   typedef unsigned __int16  uint16_t;
++   typedef unsigned __int32  uint32_t;
++#endif
++typedef signed __int64       int64_t;
++typedef unsigned __int64     uint64_t;
++
++
++// 7.18.1.2 Minimum-width integer types
++typedef int8_t    int_least8_t;
++typedef int16_t   int_least16_t;
++typedef int32_t   int_least32_t;
++typedef int64_t   int_least64_t;
++typedef uint8_t   uint_least8_t;
++typedef uint16_t  uint_least16_t;
++typedef uint32_t  uint_least32_t;
++typedef uint64_t  uint_least64_t;
++
++// 7.18.1.3 Fastest minimum-width integer types
++typedef int8_t    int_fast8_t;
++typedef int16_t   int_fast16_t;
++typedef int32_t   int_fast32_t;
++typedef int64_t   int_fast64_t;
++typedef uint8_t   uint_fast8_t;
++typedef uint16_t  uint_fast16_t;
++typedef uint32_t  uint_fast32_t;
++typedef uint64_t  uint_fast64_t;
++
++// 7.18.1.4 Integer types capable of holding object pointers
++#ifdef _WIN64 // [
++   typedef signed __int64    intptr_t;
++   typedef unsigned __int64  uintptr_t;
++#else // _WIN64 ][
++   typedef _W64 signed int   intptr_t;
++   typedef _W64 unsigned int uintptr_t;
++#endif // _WIN64 ]
++
++// 7.18.1.5 Greatest-width integer types
++typedef int64_t   intmax_t;
++typedef uint64_t  uintmax_t;
++
++
++// 7.18.2 Limits of specified-width integer types
++
++#if !defined(__cplusplus) || defined(__STDC_LIMIT_MACROS) // [   See footnote 220 at page 257 and footnote 221 at page 259
++
++// 7.18.2.1 Limits of exact-width integer types
++#define INT8_MIN     ((int8_t)_I8_MIN)
++#define INT8_MAX     _I8_MAX
++#define INT16_MIN    ((int16_t)_I16_MIN)
++#define INT16_MAX    _I16_MAX
++#define INT32_MIN    ((int32_t)_I32_MIN)
++#define INT32_MAX    _I32_MAX
++#define INT64_MIN    ((int64_t)_I64_MIN)
++#define INT64_MAX    _I64_MAX
++#define UINT8_MAX    _UI8_MAX
++#define UINT16_MAX   _UI16_MAX
++#define UINT32_MAX   _UI32_MAX
++#define UINT64_MAX   _UI64_MAX
++
++// 7.18.2.2 Limits of minimum-width integer types
++#define INT_LEAST8_MIN    INT8_MIN
++#define INT_LEAST8_MAX    INT8_MAX
++#define INT_LEAST16_MIN   INT16_MIN
++#define INT_LEAST16_MAX   INT16_MAX
++#define INT_LEAST32_MIN   INT32_MIN
++#define INT_LEAST32_MAX   INT32_MAX
++#define INT_LEAST64_MIN   INT64_MIN
++#define INT_LEAST64_MAX   INT64_MAX
++#define UINT_LEAST8_MAX   UINT8_MAX
++#define UINT_LEAST16_MAX  UINT16_MAX
++#define UINT_LEAST32_MAX  UINT32_MAX
++#define UINT_LEAST64_MAX  UINT64_MAX
++
++// 7.18.2.3 Limits of fastest minimum-width integer types
++#define INT_FAST8_MIN    INT8_MIN
++#define INT_FAST8_MAX    INT8_MAX
++#define INT_FAST16_MIN   INT16_MIN
++#define INT_FAST16_MAX   INT16_MAX
++#define INT_FAST32_MIN   INT32_MIN
++#define INT_FAST32_MAX   INT32_MAX
++#define INT_FAST64_MIN   INT64_MIN
++#define INT_FAST64_MAX   INT64_MAX
++#define UINT_FAST8_MAX   UINT8_MAX
++#define UINT_FAST16_MAX  UINT16_MAX
++#define UINT_FAST32_MAX  UINT32_MAX
++#define UINT_FAST64_MAX  UINT64_MAX
++
++// 7.18.2.4 Limits of integer types capable of holding object pointers
++#ifdef _WIN64 // [
++#  define INTPTR_MIN   INT64_MIN
++#  define INTPTR_MAX   INT64_MAX
++#  define UINTPTR_MAX  UINT64_MAX
++#else // _WIN64 ][
++#  define INTPTR_MIN   INT32_MIN
++#  define INTPTR_MAX   INT32_MAX
++#  define UINTPTR_MAX  UINT32_MAX
++#endif // _WIN64 ]
++
++// 7.18.2.5 Limits of greatest-width integer types
++#define INTMAX_MIN   INT64_MIN
++#define INTMAX_MAX   INT64_MAX
++#define UINTMAX_MAX  UINT64_MAX
++
++// 7.18.3 Limits of other integer types
++
++#ifdef _WIN64 // [
++#  define PTRDIFF_MIN  _I64_MIN
++#  define PTRDIFF_MAX  _I64_MAX
++#else  // _WIN64 ][
++#  define PTRDIFF_MIN  _I32_MIN
++#  define PTRDIFF_MAX  _I32_MAX
++#endif  // _WIN64 ]
++
++#define SIG_ATOMIC_MIN  INT_MIN
++#define SIG_ATOMIC_MAX  INT_MAX
++
++#ifndef SIZE_MAX // [
++#  ifdef _WIN64 // [
++#     define SIZE_MAX  _UI64_MAX
++#  else // _WIN64 ][
++#     define SIZE_MAX  _UI32_MAX
++#  endif // _WIN64 ]
++#endif // SIZE_MAX ]
++
++// WCHAR_MIN and WCHAR_MAX are also defined in <wchar.h>
++#ifndef WCHAR_MIN // [
++#  define WCHAR_MIN  0
++#endif  // WCHAR_MIN ]
++#ifndef WCHAR_MAX // [
++#  define WCHAR_MAX  _UI16_MAX
++#endif  // WCHAR_MAX ]
++
++#define WINT_MIN  0
++#define WINT_MAX  _UI16_MAX
++
++#endif // __STDC_LIMIT_MACROS ]
++
++
++// 7.18.4 Limits of other integer types
++
++#if !defined(__cplusplus) || defined(__STDC_CONSTANT_MACROS) // [   See footnote 224 at page 260
++
++// 7.18.4.1 Macros for minimum-width integer constants
++
++#define INT8_C(val)  val##i8
++#define INT16_C(val) val##i16
++#define INT32_C(val) val##i32
++#define INT64_C(val) val##i64
++
++#define UINT8_C(val)  val##ui8
++#define UINT16_C(val) val##ui16
++#define UINT32_C(val) val##ui32
++#define UINT64_C(val) val##ui64
++
++// 7.18.4.2 Macros for greatest-width integer constants
++#define INTMAX_C   INT64_C
++#define UINTMAX_C  UINT64_C
++
++#endif // __STDC_CONSTANT_MACROS ]
++
++
++#endif // _MSC_STDINT_H_ ]
+\ No newline at end of file
+diff --git a/tommath.h b/tommath.h
+index 7dda0a5..5ed6340 100644
+--- a/tommath.h
++++ b/tommath.h
+@@ -17,7 +17,11 @@
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
+-#include <stdint.h>
++#if defined _MSC_VER && _MSC_VER <= 1500
++	#include "ms_stdint.h"
++#else
++	#include <stdint.h>
++#endif
+ #include <limits.h>
+ 
+ #include <tommath_class.h>
+@@ -26,6 +30,11 @@
+ extern "C" {
+ #endif
+ 
++/* MS Visual C++ doesn't have a 128bit type for words, so fall back to 32bit MPI's (where words are 64bit) */
++#if defined(_MSC_VER) || defined(__LLP64__) || defined(__e2k__) || defined(__LCC__)
++#   define MP_32BIT
++#endif
++
+ /* detect 64-bit mode if possible */
+ #if defined(__x86_64__) || defined(_M_X64) || defined(_M_AMD64) || \
+     defined(__powerpc64__) || defined(__ppc64__) || defined(__PPC64__) || \
+@@ -33,9 +42,15 @@ extern "C" {
+     defined(__sparcv9) || defined(__sparc_v9__) || defined(__sparc64__) || \
+     defined(__ia64) || defined(__ia64__) || defined(__itanium__) || defined(_M_IA64) || \
+     defined(__LP64__) || defined(_LP64) || defined(__64BIT__)
+-   #if !(defined(MP_32BIT) || defined(MP_16BIT) || defined(MP_8BIT))
+-      #define MP_64BIT
+-   #endif
++#   if !(defined(MP_32BIT) || defined(MP_16BIT) || defined(MP_8BIT))
++#      if defined(__GNUC__)
++/* we support 128bit integers only via: __attribute__((mode(TI))) */
++#         define MP_64BIT
++#      else
++/* otherwise we fall back to MP_32BIT even on 64bit platforms */
++#         define MP_32BIT
++#      endif
++#   endif
+ #endif
+ 
+ /* some default configurations.
